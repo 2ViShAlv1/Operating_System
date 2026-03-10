@@ -18,6 +18,7 @@ public class RoundRobin {
         int[] rt = new int[n];
         int[] wt = new int[n];
         int[] tat = new int[n];
+        int[] ct = new int[n];
 
         for (int i = 0; i < n; i++) {
             System.out.println("Process P" + (i + 1));
@@ -28,13 +29,16 @@ public class RoundRobin {
             System.out.print("Burst Time: ");
             bt[i] = sc.nextInt();
 
-            rt[i] = bt[i]; // remaining time
+            rt[i] = bt[i];
         }
 
         System.out.print("Enter Time Quantum: ");
         tq = sc.nextInt();
 
         remain = n;
+
+        System.out.println("\nGantt Chart:");
+        System.out.print(time);
 
         while (remain != 0) {
 
@@ -49,14 +53,23 @@ public class RoundRobin {
                     if (rt[i] <= tq) {
 
                         time = time + rt[i];
-                        wt[i] = time - bt[i] - at[i];
+
+                        System.out.print(" | P" + (i + 1) + " | " + time);
+
                         rt[i] = 0;
+                        ct[i] = time;
+
+                        wt[i] = ct[i] - bt[i] - at[i];
+
                         remain--;
 
                     } else {
 
-                        rt[i] = rt[i] - tq;
                         time = time + tq;
+
+                        System.out.print(" | P" + (i + 1) + " | " + time);
+
+                        rt[i] = rt[i] - tq;
 
                     }
                 }
@@ -69,7 +82,7 @@ public class RoundRobin {
 
         double avgWT = 0, avgTAT = 0;
 
-        System.out.println("\nProcess\tAT\tBT\tWT\tTAT");
+        System.out.println("\n\nProcess\tAT\tBT\tCT\tWT\tTAT");
 
         for (int i = 0; i < n; i++) {
 
@@ -78,7 +91,7 @@ public class RoundRobin {
             avgWT += wt[i];
             avgTAT += tat[i];
 
-            System.out.println("P" + (i + 1) + "\t" + at[i] + "\t" + bt[i] + "\t" + wt[i] + "\t" + tat[i]);
+            System.out.println("P" + (i + 1) + "\t" + at[i] + "\t" + bt[i] + "\t" + ct[i] + "\t" + wt[i] + "\t" + tat[i]);
         }
 
         System.out.println("\nAverage Waiting Time = " + (avgWT / n));
